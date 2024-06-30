@@ -13,7 +13,6 @@ import StoreOptions from "./components/StoreOption";
 import Home from "./components/Home.jsx";
 import { ThirdwebProvider } from "thirdweb/react";
 import { BaseSepoliaTestnet } from "@thirdweb-dev/chains";
-import OnchainKitEx from "./OnchainKitEx.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -25,7 +24,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="/" exact element={<Home />} />
             <Route path="/lobby" exact element={<Lobby />} />
             <Route path="/game" exact element={<App />} />
-            <Route path="/test" exact element={<OnchainKitEx />} />
             <Route path="/result" exact element={<Result />} />
             <Route path="/Character" exact element={<SlideApp data={"1"} />} />
             <Route path="/Guns" exact element={<SlideApp data={"2"} />} />

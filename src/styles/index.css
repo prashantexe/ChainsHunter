@@ -90,3 +90,45 @@ body {
   text-align: center;
   display: inline-block;
 }
+
+.hrtxt {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+@keyframes runningText {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.running-text-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  width: 100%;
+}
+
+.running-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: runningText 20s linear infinite;
+}
+
+.hero2txt {
+  font-family: "Handjet", sans-serif;
+  font-weight: 700;
+  width: 800px;
+  font-size: 60px;
+  color: #c5f404;
+}
+
+.herodesctxt {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
