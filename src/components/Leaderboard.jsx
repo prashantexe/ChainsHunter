@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { usePlayersList } from "playroomkit";
+import { usePlayersList, setState, getState } from "playroomkit";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSomeValue } from '../../slices/yourSlice';
-
-const SERVER_START_TIME = Date.now() - 15000; // Simulate server start time 15 seconds ago
 
 export const Leaderboard = () => {
   const players = usePlayersList(true);
@@ -31,8 +29,19 @@ export const Leaderboard = () => {
   }, []);
 
   useEffect(() => {
+    const initializeTimer = async () => {
+      const serverStartTime = getState('serverStartTime');
+      if (!serverStartTime) {
+        const newServerStartTime = Date.now();
+        setState('serverStartTime', newServerStartTime);
+      }
+    };
+
+    initializeTimer();
+
     const intervalId = setInterval(() => {
-      const timeElapsed = Math.floor((Date.now() - SERVER_START_TIME) / 1000);
+      const serverStartTime = getState('serverStartTime');
+      const timeElapsed = Math.floor((Date.now() - serverStartTime) / 1000);
       const timeLeft = Math.max(300 - timeElapsed, 0);
       if (timeLeft <= 0) {
         clearInterval(intervalId);
