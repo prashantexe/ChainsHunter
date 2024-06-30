@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { usePlayersList, setState, getState } from "playroomkit";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,15 +7,9 @@ import { setSomeValue } from "../../slices/authslice";
 export const Leaderboard = () => {
   const players = usePlayersList(true);
   const selectedTime = useSelector((state) => state.authslice.selectedTime);
-  const [timer, setTimer] = useState(selectedTime);
-  const timerRef = useRef(selectedTime); // Ref for the timer state
+  const [timer, setTimer] = useState(selectedTime); // Use the selected time from Redux
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const intervalIdRef = useRef(null); // Ref for interval ID
-
-  useEffect(() => {
-    console.log("Selected time in Leaderboard:", selectedTime);
-  }, [selectedTime]);
 
   const handleButtonClick = useCallback(() => {
     dispatch(setSomeValue(players));
@@ -47,28 +41,21 @@ export const Leaderboard = () => {
 
     initializeTimer();
 
-    const updateTimer = () => {
+    const intervalId = setInterval(() => {
       const serverStartTime = getState("serverStartTime");
       const timeElapsed = Math.floor((Date.now() - serverStartTime) / 1000);
-      const timeLeft = Math.max(timerRef.current - timeElapsed, 0);
+      const timeLeft = Math.max(selectedTime - timeElapsed, 0); // Use selectedTime
       if (timeLeft <= 0) {
-        clearInterval(intervalIdRef.current);
+        clearInterval(intervalId);
         handleButtonClick();
         navigate("/result");
+        return 0;
       }
       setTimer(timeLeft);
-      timerRef.current = timeLeft; // Update the ref
-    };
+    }, 1000);
 
-    intervalIdRef.current = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(intervalIdRef.current);
-  }, [navigate, handleButtonClick]);
-
-  useEffect(() => {
-    setTimer(selectedTime); // Update timer when selectedTime changes
-    timerRef.current = selectedTime; // Update the ref
-  }, [selectedTime]);
+    return () => clearInterval(intervalId);
+  }, [navigate, handleButtonClick, selectedTime]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
