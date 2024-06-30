@@ -14,6 +14,7 @@
     "@react-three/postprocessing": "^2.15.1",
     "@react-three/rapier": "^1.1.1",
     "@reduxjs/toolkit": "^2.0.0",
+    "@thirdweb-dev/chains": "^0.1.120",
     "@types/three": "0.152.1",
     "browserify-global": "^1.1.2",
     "jotai": "^2.6.0",
@@ -26,6 +27,7 @@
     "react-router-dom": "^6.20.1",
     "redux": "^5.0.0",
     "simple-peer": "^9.11.1",
+    "thirdweb": "^5.31.0",
     "three": "^0.153.0",
     "three-stdlib": "^2.27.1"
   },
