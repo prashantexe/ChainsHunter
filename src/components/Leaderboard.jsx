@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { usePlayersList, setState, getState } from "playroomkit";
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setSomeValue } from '../../slices/yourSlice';
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setSomeValue } from "../../slices/authslice";
 
 export const Leaderboard = () => {
   const players = usePlayersList(true);
-  const [timer, setTimer] = useState(300); // Initial timer value in seconds (5 minutes)
+  const selectedTime = useSelector((state) => state.authslice.selectedTime);
+  const [timer, setTimer] = useState(selectedTime);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("Selected time in Leaderboard:", selectedTime);
+  }, [selectedTime]);
 
   const handleButtonClick = useCallback(() => {
     dispatch(setSomeValue(players));
@@ -16,84 +21,110 @@ export const Leaderboard = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      const message = "Are you sure you want to leave? If you leave the game the betting amount won't be refunded.";
+      const message =
+        "Are you sure you want to leave? If you leave the game the betting amount won't be refunded.";
       event.returnValue = message; // Standard for most browsers
       return message; // For some older browsers
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
   useEffect(() => {
     const initializeTimer = async () => {
-      const serverStartTime = getState('serverStartTime');
+      const serverStartTime = getState("serverStartTime");
       if (!serverStartTime) {
         const newServerStartTime = Date.now();
-        setState('serverStartTime', newServerStartTime);
+        setState("serverStartTime", newServerStartTime);
       }
     };
 
     initializeTimer();
 
     const intervalId = setInterval(() => {
-      const serverStartTime = getState('serverStartTime');
+      const serverStartTime = getState("serverStartTime");
       const timeElapsed = Math.floor((Date.now() - serverStartTime) / 1000);
-      const timeLeft = Math.max(300 - timeElapsed, 0);
+      const timeLeft = Math.max(selectedTime - timeElapsed, 0);
       if (timeLeft <= 0) {
         clearInterval(intervalId);
         handleButtonClick();
-        navigate('/result');
-        return 0;
+        navigate("/result");
       }
       setTimer(timeLeft);
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [navigate, handleButtonClick]);
+  }, [navigate, handleButtonClick, selectedTime]);
+
+  useEffect(() => {
+    setTimer(selectedTime); // Update timer when selectedTime changes
+  }, [selectedTime]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
   };
 
   return (
     <>
       <div className="fixed top-0 left-0 right-0 p-4 flex z-10 gap-4">
-        <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', top: '11%', position: "fixed" }}>
-          <p id="timer_con" style={{ backgroundColor: '#75b0feab', padding: '4px 11px', borderRadius: '9px', fontFamily: 'cursive', fontWeight: 'bold', border: '2px solid #2682fc' }}>
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            top: "11%",
+            position: "fixed",
+          }}
+        >
+          <p
+            id="timer_con"
+            style={{
+              backgroundColor: "#75b0feab",
+              padding: "4px 11px",
+              borderRadius: "9px",
+              fontFamily: "cursive",
+              fontWeight: "bold",
+              border: "2px solid #2682fc",
+            }}
+          >
             Time: {formatTime(timer)}
           </p>
         </div>
 
-        {players && players.map((player) => (
-          <div
-            key={player.id}
-            className={`bg-opacity-60 backdrop-blur-sm flex items-center rounded-lg gap-2 p-2 min-w-[140px]`}
-            style={{ backgroundColor: '#75B0FE' }}
-          >
-            <img
-              src={player.state.profile?.photo || ""}
-              className="w-10 h-10 border-2 rounded-full"
-              style={{
-                borderColor: player.state.profile?.color,
-              }}
-            />
-            <div className="flex-grow">
-              <h2 className={`font-bold text-sm`}>
-                {player.state.profile?.name}
-              </h2>
-              <div className="flex text-sm items-center gap-4">
-                <p>🔫 {player.state.kills}</p>
-                <p>💀 {player.state.deaths}</p>
+        {players &&
+          players.map((player) => (
+            <div
+              key={player.id}
+              className={`bg-opacity-60 backdrop-blur-sm flex items-center rounded-lg gap-2 p-2 min-w-[140px]`}
+              style={{ backgroundColor: "#75B0FE" }}
+            >
+              <img
+                src={player.state.profile?.photo || ""}
+                className="w-10 h-10 border-2 rounded-full"
+                style={{
+                  borderColor: player.state.profile?.color,
+                }}
+              />
+              <div className="flex-grow">
+                <h2 className={`font-bold text-sm`}>
+                  {player.state.profile?.name}
+                </h2>
+                <div className="flex text-sm items-center gap-4">
+                  <p>🔫 {player.state.kills}</p>
+                  <p>💀 {player.state.deaths}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       <button
         className="fixed top-4 right-4 z-10 text-white"
