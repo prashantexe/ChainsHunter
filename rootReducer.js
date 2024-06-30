@@ -1,10 +1,8 @@
-// rootReducer.js
-import { combineReducers } from '@reduxjs/toolkit';
-import yourSliceReducer from './slices/yourSlice';
+import { combineReducers } from "@reduxjs/toolkit";
+import authslice from "./slices/authslice";
 
 const rootReducer = combineReducers({
-  yourSlice: yourSliceReducer,
-  // Add more slices here
+  authslice,
 });
 
 export default rootReducer;

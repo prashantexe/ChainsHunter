@@ -79,7 +79,7 @@ function Home() {
           <img src={left} alt="left" className="left" />
           <div>
             <p className="text-center hero2txt ">
-              CONQUER THE FUTURE OF GAMING ON THE BASE CHAIN!
+              CONQUER THE FUTURE OF GAMING ON THE EVM & NON-EVM CHAIN!
             </p>
             <p className="w-[700px] text-[#D6D6D6] herodesc text-center">
               Experience intense multiplayer battles, climb leaderboards for
@@ -155,10 +155,10 @@ function Home() {
         <div className="flex mt-20 justify-between">
           <img src={left} alt="left" className="left" />
           <div>
-            <p className="text-center hero2txt ">HOW CHAINHUNTER WORKS? </p>
+            <p className="text-center hero2txt ">HOW CHAINSHUNTER WORKS? </p>
             <p className="w-[800px] text-[#D6D6D6] herodesc text-center">
               Discover the seamless integration of blockchain technology and
-              immersive gameplay with Chainhunter. Here’s how you can dive into
+              immersive gameplay with Chainshunter. Here’s how you can dive into
               the adventure:{" "}
             </p>
           </div>
