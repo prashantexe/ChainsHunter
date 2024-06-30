@@ -1,13 +1,14 @@
 import { Billboard, CameraControls, Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
-import { isHost } from "playroomkit";
+import { myPlayer } from "playroomkit";
 import { useEffect, useRef, useState } from "react";
 import { CharacterSoldier } from "./CharacterSoldier";
+
 const MOVEMENT_SPEED = 202;
 const FIRE_RATE = 380;
 const JUMP_FORCE = 20;
-var i = 0
+var i = 0;
 export const WEAPON_OFFSET = {
   x: -0.2,
   y: 1.4,
@@ -65,10 +66,10 @@ export const CharacterController = ({
   };
 
   useEffect(() => {
-    if (isHost()) {
+    if (userPlayer) {
       spawnRandomly();
     }
-  }, []);
+  }, [userPlayer]);
 
   useEffect(() => {
     if (state.state.dead) {
@@ -86,23 +87,8 @@ export const CharacterController = ({
     }
   }, [state.state.health]);
 
-
-
   useFrame((_, delta) => {
     // CAMERA FOLLOW
-
-    // if (joystick.isPressed("swap")) {
-    //   setWeapon(WEAPONS[i]);
-      
-    //   if(i == WEAPONS.length){
-    //     i=0
-    //   }else{
-    //     i++;
-    //   }
-    //   // CharacterSoldier({color:state.state.profile?.color,animation:animation,weapon:weapon})
-    //   console.log("Weapons are swaapped...!", weapon)
-    // }
-
     if (controls.current) {
       const cameraDistanceY = window.innerWidth < 1024 ? 16 : 20;
       const cameraDistanceZ = window.innerWidth < 1024 ? 12 : 16;
@@ -142,7 +128,7 @@ export const CharacterController = ({
     }
     const playerWorldPos = vec3(rigidbody.current.translation());
 
-    if (joystick.isPressed("jump") && playerWorldPos.y<2) {
+    if (joystick.isPressed("jump") && playerWorldPos.y < 2) {
       setAnimation("Run");
       character.current.rotation.y = angle;
 
@@ -153,45 +139,50 @@ export const CharacterController = ({
         z: Math.cos(angle) * MOVEMENT_SPEED * delta,
       };
       rigidbody.current.applyImpulse(impulse, true);
-    }else{
+    } else {
       const impulse = {
         x: 0,
         y: -2,
         z: 0,
       };
-      if(playerWorldPos.y>0){
+      if (playerWorldPos.y > 0) {
         rigidbody.current.applyImpulse(impulse, true);
       }
     }
+
     // Check if fire button is pressed
     if (joystick.isPressed("fire")) {
       // fire
       setAnimation(
         joystick.isJoystickPressed() && angle ? "Run_Shoot" : "Idle_Shoot"
       );
-      if (isHost()) {
-        if (Date.now() - lastShoot.current > FIRE_RATE) {
-          lastShoot.current = Date.now();
-          const newBullet = {
-            id: state.id + "-" + +new Date(),
-            position: vec3(rigidbody.current.translation()),
-            angle,
-            player: state.id,
-          };
-          onFire(newBullet);
-        }
+      if (Date.now() - lastShoot.current > FIRE_RATE) {
+        lastShoot.current = Date.now();
+        const newBullet = {
+          id: state.id + "-" + +new Date(),
+          position: vec3(rigidbody.current.translation()),
+          angle,
+          player: state.id,
+        };
+        onFire(newBullet);
       }
     }
 
-    if (isHost()) {
+    if (userPlayer) {
       state.setState("pos", rigidbody.current.translation());
+      state.setState("rotY", character.current.rotation.y);
     } else {
       const pos = state.getState("pos");
+      const rotY = state.getState("rotY");
       if (pos) {
         rigidbody.current.setTranslation(pos);
       }
+      if (rotY !== undefined) {
+        character.current.rotation.y = rotY;
+      }
     }
   });
+
   const controls = useRef();
   const directionalLight = useRef();
 
@@ -209,12 +200,11 @@ export const CharacterController = ({
         colliders={false}
         linearDamping={12}
         lockRotations
-        type={isHost() ? "dynamic" : "kinematicPosition"}
+        type={userPlayer ? "dynamic" : "kinematicPosition"}
         onIntersectionEnter={({ other }) => {
           if (
-            isHost() &&
             other.rigidBody.userData.type === "bullet" &&
-            state.state.health > 0
+            other.rigidBody.userData.player !== state.id
           ) {
             const newHealth =
               state.state.health - other.rigidBody.userData.damage;
@@ -250,14 +240,11 @@ export const CharacterController = ({
           )}
         </group>
         {userPlayer && (
-          // Finally I moved the light to follow the player
-          // This way we won't need to calculate ALL the shadows but only the ones
-          // that are in the camera view
           <directionalLight
             ref={directionalLight}
             position={[25, 18, -25]}
             intensity={0.3}
-            castShadow={!downgradedPerformance} // Disable shadows on low-end devices
+            castShadow={!downgradedPerformance}
             shadow-camera-near={0}
             shadow-camera-far={100}
             shadow-camera-left={-20}

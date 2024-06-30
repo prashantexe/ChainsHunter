@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { usePlayersList } from "playroomkit";
+import React, { useState, useEffect, useCallback } from "react";
+import { usePlayersList, setState, getState } from "playroomkit";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSomeValue } from '../../slices/yourSlice';
@@ -8,12 +8,11 @@ export const Leaderboard = () => {
   const players = usePlayersList(true);
   const [timer, setTimer] = useState(300); // Initial timer value in seconds (5 minutes)
   const dispatch = useDispatch();
-  const someValue = useSelector(state => state.yourSlice.someValue);
   const navigate = useNavigate();
 
-  const handleButtonClick = () => {
+  const handleButtonClick = useCallback(() => {
     dispatch(setSomeValue(players));
-  };
+  }, [dispatch, players]);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -30,26 +29,27 @@ export const Leaderboard = () => {
   }, []);
 
   useEffect(() => {
-    const storedStartTime = localStorage.getItem("startTime");
-    if (!storedStartTime) {
-      const startTime = Date.now();
-      localStorage.setItem("startTime", startTime);
-    }
+    const initializeTimer = async () => {
+      const serverStartTime = getState('serverStartTime');
+      if (!serverStartTime) {
+        const newServerStartTime = Date.now();
+        setState('serverStartTime', newServerStartTime);
+      }
+    };
+
+    initializeTimer();
 
     const intervalId = setInterval(() => {
-      const startTime = localStorage.getItem("startTime");
-      if (startTime) {
-        const timeElapsed = Math.floor((Date.now() - startTime) / 1000);
-        const timeLeft = Math.max(300 - timeElapsed, 0);
-        setTimer(timeLeft);
-
-        if (timeLeft <= 0) {
-          clearInterval(intervalId);
-          localStorage.setItem("gameOver", 'true');
-          handleButtonClick();
-          navigate('/result');
-        }
+      const serverStartTime = getState('serverStartTime');
+      const timeElapsed = Math.floor((Date.now() - serverStartTime) / 1000);
+      const timeLeft = Math.max(300 - timeElapsed, 0);
+      if (timeLeft <= 0) {
+        clearInterval(intervalId);
+        handleButtonClick();
+        navigate('/result');
+        return 0;
       }
+      setTimer(timeLeft);
     }, 1000);
 
     return () => clearInterval(intervalId);
@@ -58,19 +58,6 @@ export const Leaderboard = () => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    if (minutes < 1 && remainingSeconds < 1) {
-      const obj = document.getElementById("timer_con");
-      if (obj) {
-        obj.style.backgroundColor = 'rgba(182, 47, 47, 0.99)';
-        obj.style.padding = '4px 11px';
-        obj.style.borderRadius = '9px';
-        obj.style.fontFamily = 'cursive';
-        obj.style.fontWeight = 'bold';
-        obj.style.boxShadow = '0px 0px 20px 20px #ff000059';
-        obj.style.border = '2px solid rgb(252, 38, 68)';
-        obj.style.transition = 'background-color 0.5s ease-in-out';
-      }
-    }
     return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
   };
 
@@ -83,7 +70,7 @@ export const Leaderboard = () => {
           </p>
         </div>
 
-        {players.map((player) => (
+        {players && players.map((player) => (
           <div
             key={player.id}
             className={`bg-opacity-60 backdrop-blur-sm flex items-center rounded-lg gap-2 p-2 min-w-[140px]`}
