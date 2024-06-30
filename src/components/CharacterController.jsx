@@ -8,7 +8,7 @@ import { CharacterSoldier } from "./CharacterSoldier";
 const MOVEMENT_SPEED = 202;
 const FIRE_RATE = 380;
 const JUMP_FORCE = 20;
-var i = 0;
+
 export const WEAPON_OFFSET = {
   x: -0.2,
   y: 1.4,
@@ -20,7 +20,7 @@ const WEAPONS = [
   "AK",
   "Knife_1",
   "Knife_2",
-  "Pistol", 
+  "Pistol",
   "Revolver",
   "Revolver_Small",
   "RocketLauncher",
@@ -42,13 +42,18 @@ export const CharacterController = ({
   ...props
 }) => {
   const [weapon, setWeapon] = useState("AK");
-  console.log("useState call :",weapon)
   const group = useRef();
   const character = useRef();
   const rigidbody = useRef();
   const [animation, setAnimation] = useState("Idle");
   const lastShoot = useRef(0);
-  const [movement, setMovement] = useState({ forward: false, backward: false, left: false, right: false, fire: false });
+  const [movement, setMovement] = useState({
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+    fire: false,
+  });
   const scene = useThree((state) => state.scene);
 
   const spawnRandomly = () => {
@@ -91,23 +96,23 @@ export const CharacterController = ({
     const handleKeyDown = (event) => {
       if (event.repeat) return;
       switch (event.code) {
-        case 'KeyW':
-        case 'ArrowUp':
+        case "KeyW":
+        case "ArrowUp":
           setMovement((prev) => ({ ...prev, forward: true }));
           break;
-        case 'KeyS':
-        case 'ArrowDown':
+        case "KeyS":
+        case "ArrowDown":
           setMovement((prev) => ({ ...prev, backward: true }));
           break;
-        case 'KeyA':
-        case 'ArrowLeft':
+        case "KeyA":
+        case "ArrowLeft":
           setMovement((prev) => ({ ...prev, left: true }));
           break;
-        case 'KeyD':
-        case 'ArrowRight':
+        case "KeyD":
+        case "ArrowRight":
           setMovement((prev) => ({ ...prev, right: true }));
           break;
-        case 'KeyF':
+        case "KeyF":
           setMovement((prev) => ({ ...prev, fire: true }));
           break;
         default:
@@ -117,23 +122,23 @@ export const CharacterController = ({
 
     const handleKeyUp = (event) => {
       switch (event.code) {
-        case 'KeyW':
-        case 'ArrowUp':
+        case "KeyW":
+        case "ArrowUp":
           setMovement((prev) => ({ ...prev, forward: false }));
           break;
-        case 'KeyS':
-        case 'ArrowDown':
+        case "KeyS":
+        case "ArrowDown":
           setMovement((prev) => ({ ...prev, backward: false }));
           break;
-        case 'KeyA':
-        case 'ArrowLeft':
+        case "KeyA":
+        case "ArrowLeft":
           setMovement((prev) => ({ ...prev, left: false }));
           break;
-        case 'KeyD':
-        case 'ArrowRight':
+        case "KeyD":
+        case "ArrowRight":
           setMovement((prev) => ({ ...prev, right: false }));
           break;
-        case 'KeyF':
+        case "KeyF":
           setMovement((prev) => ({ ...prev, fire: false }));
           break;
         default:
@@ -142,14 +147,14 @@ export const CharacterController = ({
     };
 
     if (userPlayer) {
-      window.addEventListener('keydown', handleKeyDown);
-      window.addEventListener('keyup', handleKeyUp);
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
     }
 
     return () => {
       if (userPlayer) {
-        window.removeEventListener('keydown', handleKeyDown);
-        window.removeEventListener('keyup', handleKeyUp);
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
       }
     };
   }, [userPlayer]);
@@ -216,10 +221,7 @@ export const CharacterController = ({
     const playerWorldPos = vec3(rigidbody.current.translation());
 
     if (joystick.isPressed("jump") && playerWorldPos.y < 2) {
-      setAnimation("Run");
-      applyMovement(angle);
-
-      // move character in its own direction
+      setAnimation("Jump");
       const impulse = {
         x: Math.sin(angle) * MOVEMENT_SPEED * delta,
         y: JUMP_FORCE,
@@ -255,17 +257,23 @@ export const CharacterController = ({
       }
     }
 
+    // Sync animation state across the network
     if (userPlayer) {
       state.setState("pos", rigidbody.current.translation());
       state.setState("rotY", character.current.rotation.y);
+      state.setState("animation", animation);
     } else {
       const pos = state.getState("pos");
       const rotY = state.getState("rotY");
+      const networkAnimation = state.getState("animation");
       if (pos) {
         rigidbody.current.setTranslation(pos);
       }
       if (rotY !== undefined) {
         character.current.rotation.y = rotY;
+      }
+      if (networkAnimation !== undefined) {
+        setAnimation(networkAnimation);
       }
     }
   });
