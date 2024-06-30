@@ -4,6 +4,7 @@ Welcome to **ChainsHunter**, the multiplayer survival shooting game built on the
 
 ![123](https://github.com/vmmuthu31/ChainsHunter/assets/111880621/d6740416-9101-4b3a-94bb-de51bf5c75c9)
 
+![image](https://github.com/vmmuthu31/ChainsHunter/assets/111880621/a5046f81-d5c8-4157-84fb-759465e4e298)
 
 ## 🚀 Overview
 
