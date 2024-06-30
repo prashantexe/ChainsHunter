@@ -1,8 +1,8 @@
+import React, { useState, useEffect, useRef } from "react";
 import { Billboard, CameraControls, Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
 import { myPlayer } from "playroomkit";
-import { useEffect, useRef, useState } from "react";
 import { CharacterSoldier } from "./CharacterSoldier";
 
 const MOVEMENT_SPEED = 202;
@@ -53,8 +53,11 @@ export const CharacterController = ({
     left: false,
     right: false,
     fire: false,
+    jump: false,
   });
   const scene = useThree((state) => state.scene);
+  const controls = useRef();
+  const directionalLight = useRef();
 
   const spawnRandomly = () => {
     const spawns = [];
@@ -115,6 +118,9 @@ export const CharacterController = ({
         case "KeyF":
           setMovement((prev) => ({ ...prev, fire: true }));
           break;
+        case "Space":
+          setMovement((prev) => ({ ...prev, jump: true }));
+          break;
         default:
           break;
       }
@@ -140,6 +146,9 @@ export const CharacterController = ({
           break;
         case "KeyF":
           setMovement((prev) => ({ ...prev, fire: false }));
+          break;
+        case "Space":
+          setMovement((prev) => ({ ...prev, jump: false }));
           break;
         default:
           break;
@@ -220,7 +229,7 @@ export const CharacterController = ({
 
     const playerWorldPos = vec3(rigidbody.current.translation());
 
-    if (joystick.isPressed("jump") && playerWorldPos.y < 2) {
+    if ((joystick.isPressed("jump") || movement.jump) && playerWorldPos.y < 2) {
       setAnimation("Jump");
       const impulse = {
         x: Math.sin(angle) * MOVEMENT_SPEED * delta,
@@ -277,9 +286,6 @@ export const CharacterController = ({
       }
     }
   });
-
-  const controls = useRef();
-  const directionalLight = useRef();
 
   useEffect(() => {
     if (character.current && userPlayer) {
