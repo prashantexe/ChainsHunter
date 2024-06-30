@@ -1,6 +1,9 @@
 import React from "react";
 import Navbar from "./Navbar";
 import herobg from "../assets/hero-bg.svg";
+import starsvg from "../assets/star.svg";
+import left from "../assets/left.svg";
+import right from "../assets/right.svg";
 
 function Home() {
   return (
@@ -24,6 +27,56 @@ function Home() {
           <button className="playnowbtn">Play Now!!</button>
         </div>
       </main>
+      <div>
+        <hr className="border-[#A3C60FE5]" />
+        <div className="running-text-container">
+          <div className="running-text flex items-center">
+            <span className="text-[#A3C60FE5] hrtxt text-5xl mr-2">
+              Experience the Future of Gaming on the Base Chain!
+            </span>
+            <img src={starsvg} alt="star" className="inline-block mr-2" />
+            <span className="text-[#A3C60FE5] hrtxt text-5xl mr-2">
+              Dynamic Challenges Await – Are You Ready to Conquer?
+            </span>
+            <img src={starsvg} alt="star" className="inline-block mr-2" />
+            <span className="text-[#A3C60FE5] hrtxt text-5xl mr-2">
+              Join Now and Prove Your Skills!
+            </span>
+            <img src={starsvg} alt="star" className="inline-block mr-2" />
+            <span className="text-[#A3C60FE5] hrtxt text-5xl mr-2">
+              Experience the Future of Gaming on the Base Chain!
+            </span>
+            <img src={starsvg} alt="star" className="inline-block mr-2" />
+            <span className="text-[#A3C60FE5] hrtxt text-5xl mr-2">
+              Dynamic Challenges Await – Are You Ready to Conquer?
+            </span>
+            <img src={starsvg} alt="star" className="inline-block mr-2" />
+            <span className="text-[#A3C60FE5] hrtxt text-5xl mr-2">
+              Join Now and Prove Your Skills!
+            </span>
+            <img src={starsvg} alt="star" className="inline-block mr-2" />
+          </div>
+        </div>
+        <hr className="border-[#A3C60FE5]" />
+      </div>
+      <div>
+        <div className="flex mt-20 justify-between">
+          <img src={left} alt="left" className="left" />
+          <div>
+            <p className="text-center hero2txt ">
+              CONQUER THE FUTURE OF GAMING ON THE BASE CHAIN!
+            </p>
+            <p className="w-[700px] text-[#D6D6D6] herodesc text-center">
+              Experience intense multiplayer battles, climb leaderboards for
+              exclusive NFT rewards, and enjoy lifelike graphics powered by
+              blockchain technology. Enter custom rooms, strategize, and
+              dominate countdown-driven challenges for unparalleled gaming
+              excitement.
+            </p>
+          </div>
+          <img src={right} alt="right" className="right" />
+        </div>
+      </div>
     </div>
   );
 }
