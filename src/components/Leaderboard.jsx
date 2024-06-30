@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSomeValue } from '../../slices/yourSlice';
 
+const SERVER_START_TIME = Date.now() - 15000; // Simulate server start time 15 seconds ago
+
 export const Leaderboard = () => {
   const players = usePlayersList(true);
   const [timer, setTimer] = useState(300); // Initial timer value in seconds (5 minutes)
@@ -29,24 +31,16 @@ export const Leaderboard = () => {
   }, []);
 
   useEffect(() => {
-    let storedStartTime = localStorage.getItem("sharedStartTime");
-    if (!storedStartTime) {
-      storedStartTime = Date.now();
-      localStorage.setItem("sharedStartTime", storedStartTime);
-    }
-
     const intervalId = setInterval(() => {
-      const startTime = parseInt(storedStartTime, 10);
-      const timeElapsed = Math.floor((Date.now() - startTime) / 1000);
+      const timeElapsed = Math.floor((Date.now() - SERVER_START_TIME) / 1000);
       const timeLeft = Math.max(300 - timeElapsed, 0);
-
-      setTimer(timeLeft);
-
       if (timeLeft <= 0) {
         clearInterval(intervalId);
         handleButtonClick();
         navigate('/result');
+        return 0;
       }
+      setTimer(timeLeft);
     }, 1000);
 
     return () => clearInterval(intervalId);
