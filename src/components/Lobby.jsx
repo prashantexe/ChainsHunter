@@ -9,7 +9,7 @@ function Lobby() {
 
   return (
     <>
-      <div className="bg-[url('https://blogger.googleusercontent.com/img/a/AVvXsEhnD6k83f7VLrtmGoYKcqJk_lSnWZwgDl-Fgz3RTsKgatlb276B0QhB3xi_mEl7jsRIVgUxASTVenCDoqXju-Q2YfCi__LT70OcLJjYgbl8AE1tcqPdHGYCUgzUuUI5DN5J9hQBHSVyb9AA_BZSwfaZXL-RxvvIRtqT3P0jsV1YzD_rb62S9reTOCxg24k')] min-h-screen  bg-no-repeat bg-cover">
+      <div className="bg-[url('../assets/lobbybg.svg')] min-h-screen  bg-no-repeat bg-cover">
         <div className="flex items-center space-x-11 text-white text-xl mx-20 py-8">
           <div className="flex homeprofilebg px-3 py-2 gap-3 items-center space-x-3">
             <img
@@ -77,7 +77,7 @@ function Lobby() {
               </div>
             </div>
           </div>
-          <div className="root2 mt-20">
+          <div className="root2 mt-32">
             <Canvas camera={{ fov: 75, position: [0, 1, 5] }} shadows>
               <directionalLight position={[3.3, 1.0, 4.4]} castShadow />
               <primitive object={gltf.scene} position={[0, 1, 0]} castShadow />
