@@ -2,7 +2,7 @@ import { ConnectButton, darkTheme } from "thirdweb/react";
 import { createWallet, walletConnect, inAppWallet } from "thirdweb/wallets";
 import { createThirdwebClient } from "thirdweb";
 import navicon from "../assets/navicon.png";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const client = createThirdwebClient({
   clientId: "bdf8ac5001cc48ecf7efeec38c34a82f",
@@ -43,7 +43,7 @@ function Navbar() {
         </div>
         <img src={navicon} alt="logo" />
         <div className="flex gap-20">
-          <Link to="/lobby">
+          <Link href="/lobby">
             <button className="bg-[#B9FF09] rounded-full text-3xl px-12 py-5  font-semibold text-black ">
               Play Now!
             </button>{" "}

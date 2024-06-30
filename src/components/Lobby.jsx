@@ -2,7 +2,7 @@ import React from "react";
 import { Stats, OrbitControls, Circle } from "@react-three/drei";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 function Lobby() {
   const gltf = useLoader(GLTFLoader, "./models/Character_Soldier.gltf");
@@ -46,7 +46,7 @@ function Lobby() {
                   className="h-14 w-auto"
                 />
                 <p>
-                  <Link to="/options" className="text-4xl">
+                  <Link href="/options" className="text-4xl">
                     Store
                   </Link>
                 </p>
@@ -77,7 +77,7 @@ function Lobby() {
               </div>
             </div>
           </div>
-          <div className="root2">
+          <div className="root2 mt-20">
             <Canvas camera={{ fov: 75, position: [0, 1, 5] }} shadows>
               <directionalLight position={[3.3, 1.0, 4.4]} castShadow />
               <primitive object={gltf.scene} position={[0, 1, 0]} castShadow />

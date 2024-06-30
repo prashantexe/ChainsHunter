@@ -16,7 +16,7 @@ import g2 from "../assets/g2.svg";
 import g3 from "../assets/g3.svg";
 import g4 from "../assets/g4.png";
 import g5 from "../assets/g5.svg";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 function Home() {
   return (
@@ -37,7 +37,7 @@ function Home() {
             Experience epic PvP battles, earn exclusive NFT rewards, and embrace
             gaming realism like never before.
           </p>
-          <Link to="/lobby">
+          <Link href="/lobby">
             <button className="playnowbtn">Play Now!!</button>
           </Link>
         </div>
@@ -143,7 +143,7 @@ function Home() {
             </p>{" "}
             <img src={icon5} alt="icon1" className="w-32 h-32" />
             <div>
-              <Link to="/lobby">
+              <Link href="/lobby">
                 <img src={play} alt="play" className="play" />
               </Link>
             </div>
