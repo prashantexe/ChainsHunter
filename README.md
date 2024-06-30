@@ -1,12 +1,12 @@
-# Chainhunter
+# ChainsHunter
 
-Welcome to **Chainhunter**, the multiplayer survival shooting game built on the **Base chain**. Dive into a gaming experience that seamlessly integrates blockchain technology, ensuring every victory, reward, and challenge is transparent and secure.
+Welcome to **ChainsHunter**, the multiplayer survival shooting game built on the **Base chain**. Dive into a gaming experience that seamlessly integrates blockchain technology, ensuring every victory, reward, and challenge is transparent and secure.
 
 ![123](https://github.com/vmmuthu31/ChainsHunter/assets/111880621/952d96c4-c390-482d-b616-dbe2486a46ff)
 
 ## 🚀 Overview
 
-**Chainhunter** is more than just a game; it’s a journey into a future where blockchain technology powers immersive gameplay. On the **Base chain**, we bring unparalleled security, transparency, and innovation to your gaming experience. Engage in epic PvP battles, earn exclusive NFTs, and explore a universe where your every move is backed by the reliability of blockchain.
+**ChainsHunter** is more than just a game; it’s a journey into a future where blockchain technology powers immersive gameplay. On the **Base chain**, we bring unparalleled security, transparency, and innovation to your gaming experience. Engage in epic PvP battles, earn exclusive NFTs, and explore a universe where your every move is backed by the reliability of blockchain.
 
 ## 🌟 Key Features
 
@@ -27,7 +27,7 @@ Transform your victories into valuable digital assets. Earn and collect exclusiv
 
 ## 🛠 Tech Stack
 
-**Chainhunter** leverages advanced technologies to provide an exceptional gaming experience, underpinned by the **Base chain**:
+**ChainsHunter** leverages advanced technologies to provide an exceptional gaming experience, underpinned by the **Base chain**:
 - **Next.js**: For a robust, scalable, and fast frontend.
 - **Solidity**: For creating secure and efficient smart contracts.
 - **Ether.js / Web3.js**: For seamless blockchain interactions with the **Base chain**.
@@ -38,7 +38,7 @@ Transform your victories into valuable digital assets. Earn and collect exclusiv
 
 ## 📈 Future Roadmap
 
-**Chainhunter** is committed to continual evolution, enhancing your experience on the **Base chain**. Our roadmap includes:
+**ChainsHunter** is committed to continual evolution, enhancing your experience on the **Base chain**. Our roadmap includes:
 - **Advanced Analytics and Security Integration**: Leveraging advanced tools to provide deeper insights and fortified security, all with the reliability of the **Base chain**.
 - **Expanded Avatar and NFT Ecosystem**: Introducing more characters and exclusive digital assets, further enriching your gaming experience on the **Base chain**.
 - **Global Tournaments and Events**: Hosting large-scale tournaments and community events with exciting rewards, all tracked transparently on the **Base chain**.
@@ -57,13 +57,13 @@ Stay tuned for updates as we unlock new dimensions in blockchain gaming!
 
 ## 🏆 Get Started
 
-Ready to dive into the future of gaming? Visit Chainhunter Website and start your adventure today on the **Base chain**!
+Ready to dive into the future of gaming? Visit ChainsHunter Website and start your adventure today on the **Base chain**!
 
 https://www.chainshunter.xyz/
 
 ---
 
-**Chainhunter**: Where gaming excellence meets the security and transparency of the **Base chain**. Play now and be part of the revolution!
+**ChainsHunter**: Where gaming excellence meets the security and transparency of the **Base chain**. Play now and be part of the revolution!
 
 ---
 
