@@ -25,7 +25,10 @@ export const Experience = ({ downgradedPerformance = false }) => {
       // For others, it will only sync their state
       const joystick = new Joystick(state, {
         type: "angular",
-        buttons: [{ id: "fire", label: "Fire" },{ id: "jump", label: "Jump" }],
+        buttons: [
+          { id: "fire", label: "Fire" },
+          { id: "jump", label: "Jump" },
+        ],
       });
       const newPlayer = { state, joystick };
       state.setState("health", 100);
@@ -37,12 +40,10 @@ export const Experience = ({ downgradedPerformance = false }) => {
       });
     });
   };
-  
 
   useEffect(() => {
     start();
   }, []);
-
 
   const [bullets, setBullets] = useState([]);
   const [hits, setHits] = useState([]);
@@ -54,24 +55,40 @@ export const Experience = ({ downgradedPerformance = false }) => {
   const [networkHits, setNetworkHits] = useMultiplayerState("hits", []);
 
   const onFire = (bullet) => {
-    setBullets((bullets) => [...bullets, bullet]);
+    if (isHost()) {
+      setBullets((bullets) => [...bullets, bullet]);
+    } else {
+      setNetworkBullets((bullets) => [...bullets, bullet]);
+    }
   };
 
   const onHit = (bulletId, position) => {
-    setBullets((bullets) => bullets.filter((bullet) => bullet.id !== bulletId));
-    setHits((hits) => [...hits, { id: bulletId, position }]);
+    if (isHost()) {
+      setBullets((bullets) => bullets.filter((bullet) => bullet.id !== bulletId));
+      setHits((hits) => [...hits, { id: bulletId, position }]);
+    } else {
+      setNetworkHits((hits) => [...hits, { id: bulletId, position }]);
+    }
   };
 
   const onHitEnded = (hitId) => {
-    setHits((hits) => hits.filter((h) => h.id !== hitId));
+    if (isHost()) {
+      setHits((hits) => hits.filter((h) => h.id !== hitId));
+    } else {
+      setNetworkHits((hits) => hits.filter((h) => h.id !== hitId));
+    }
   };
 
   useEffect(() => {
-    setNetworkBullets(bullets);
+    if (isHost()) {
+      setNetworkBullets(bullets);
+    }
   }, [bullets]);
 
   useEffect(() => {
-    setNetworkHits(hits);
+    if (isHost()) {
+      setNetworkHits(hits);
+    }
   }, [hits]);
 
   const onKilled = (_victim, killer) => {
