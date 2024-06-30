@@ -77,6 +77,23 @@ function Home() {
           <img src={right} alt="right" className="right" />
         </div>
       </div>
+
+      <div>
+        <div className="flex mt-20 justify-between">
+          <img src={left} alt="left" className="left" />
+          <div>
+            <p className="text-center hero2txt ">HOW CHAINHUNTER WORKS? </p>
+            <p className="w-[700px] text-[#D6D6D6] herodesc text-center">
+              Discover the seamless integration of blockchain technology and
+              immersive gameplay with Chainhunter. Here’s how you can dive into
+              the adventure:{" "}
+            </p>
+          </div>
+          <img src={right} alt="right" className="right" />
+        </div>
+      </div>
+
+      <div className="bg-[#9FC610] w-full h-6 mt-20" />
     </div>
   );
 }
