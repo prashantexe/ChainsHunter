@@ -16,7 +16,6 @@ const queryClient = new QueryClient();
 
 function OnchainKitEx() {
   return (
-    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey="8QqQGg5kIhSA153zcMqVpJtJXAsRAetA"
@@ -48,7 +47,6 @@ function OnchainKitEx() {
 
         </OnchainKitProvider>
       </QueryClientProvider>
-    </WagmiProvider> 
   );
 }
 
