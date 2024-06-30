@@ -80,6 +80,11 @@ https://www.chainshunter.xyz/
 ![Screenshot 2024-07-01 004504](https://github.com/vmmuthu31/ChainsHunter/assets/111880621/b104fb2e-0f3a-4aeb-88ab-25cd316965af)
 
 
+## Contract address 
+
+0x35Fd574e9f48a9886b66753868b6084DC024b207 
+
+
 
 
 
