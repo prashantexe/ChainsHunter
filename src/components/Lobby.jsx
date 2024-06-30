@@ -99,8 +99,8 @@ function Lobby() {
                 className="h-72 rounded-2xl mt-10 w-auto"
                 alt=""
               />
-              <div className="absolute    top-[625px]">
-                <p className="text-center lobbyprof text-4xl bg-black bg-opacity-40 py-2 px-[120px]">
+              <div className="absolute    top-[626px]">
+                <p className="text-center lobbyprof text-4xl  bg-black bg-opacity-40 py-2 px-[107px]">
                   Bermuda
                 </p>
               </div>
