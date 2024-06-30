@@ -2,6 +2,169 @@ import React, { useEffect, useState } from 'react';
 import "./../styles/result.css"
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { createThirdwebClient , getContract,sendTransaction,sendAndConfirmTransaction, waitForReceipt} from "thirdweb";
+
+import { prepareContractCall, toWei } from "thirdweb";
+import { baseSepolia } from "thirdweb/chains";
+import { createWallet } from "thirdweb/wallets";
+import { useActiveAccount } from "thirdweb/react";
+
+const client = createThirdwebClient({
+    clientId: "e07867b911692f2b00be9125ce95f668",
+  });
+
+  const contract = getContract({
+    // the client you have created via `createThirdwebClient()`
+    client,
+    // the chain the contract is deployed on
+    chain: baseSepolia,
+    // the contract's address
+    address: "0x35Fd574e9f48a9886b66753868b6084DC024b207",
+    // OPTIONAL: the contract's abi
+    abi: [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "winner",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "killCount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "deathCount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "tokenURI",
+                    "type": "string"
+                }
+            ],
+            "name": "recordWinner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract ChainHunterToken",
+                    "name": "_token",
+                    "type": "address"
+                },
+                {
+                    "internalType": "contract ChainHunterNFT",
+                    "name": "_nft",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "winner",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "killCount",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "deathCount",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "WinnerRecorded",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "playerStats",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "killCount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "deathCount",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ],
+  });
+
+  const wallet = createWallet("io.metamask");
+
+  var life = false;
+ 
+// connect the wallet, this returns a promise that resolves to the connected account
+const account = await wallet.connect({
+  // pass the client you created with `createThirdwebClient()`
+  client,
+});
+
+const prep = async (someValue) => {
+
+    if (life) {
+        console.log("Life is already true, exiting function.");
+        return;
+      }
+    const transaction = prepareContractCall({
+    contract,
+    // We get auto-completion for all the available functions on the contract ABI
+    method: "recordWinner",
+    // including full type-safety for the params
+    params: [account.address,someValue.state.kills,someValue.state.deaths, "https://gateway.pinata.cloud/ipfs/QmfBERMctCnt5k4hGz1wx2dUyz7pPc5jmGMtrG8NoqW3Pd"],
+  });
+
+  console.log("tx",transaction)
+if(life === false){
+    const transactionResult = await sendTransaction({
+        transaction,
+        account
+      });
+      const receipt = await waitForReceipt(transactionResult);
+
+      console.log("receiptr", receipt);
+      life = true
+
+}
+
+
+  
+
+}
 
 
 const Result = () => {
@@ -9,6 +172,7 @@ const Result = () => {
     const someValue = useSelector(state => state.yourSlice.someValue);
     const [applyed, setApplyed] = useState(false)
     const [myrank, setrank] = useState(false)
+    const [mine, setmine] = useState(false)
     try{
         var a = someValue[0].id
     }catch(e){
@@ -33,6 +197,19 @@ const Result = () => {
             player.rank = index + 1;
         });
 
+
+console.log("asfasfasfasfas")
+console.log("see me here", contract);
+console.log("account",account);
+
+console.log("someValue",someValue)
+console.log("mine", mine);
+if(life === false){
+    console.log("life");
+    prep(someValue[0])
+
+}
+setmine(true)
         const randomEmoji = () => {
             const emojis = ['👏','👍','🙌','🤩','🔥','⭐️','🏆','💯'];
             let randomNumber = Math.floor(Math.random() * emojis.length);

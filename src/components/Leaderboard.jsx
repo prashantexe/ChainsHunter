@@ -6,7 +6,7 @@ import { setSomeValue } from '../../slices/yourSlice';
 
 export const Leaderboard = () => {
   const players = usePlayersList(true);
-  const [timer, setTimer] = useState(300); // Initial timer value in seconds (5 minutes)
+  const [timer, setTimer] = useState(30); // Initial timer value in seconds (5 minutes)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ export const Leaderboard = () => {
     const intervalId = setInterval(() => {
       const serverStartTime = getState('serverStartTime');
       const timeElapsed = Math.floor((Date.now() - serverStartTime) / 1000);
-      const timeLeft = Math.max(300 - timeElapsed, 0);
+      const timeLeft = Math.max(30 - timeElapsed, 0);
       if (timeLeft <= 0) {
         clearInterval(intervalId);
         handleButtonClick();
