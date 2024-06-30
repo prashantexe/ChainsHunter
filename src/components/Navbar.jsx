@@ -44,7 +44,7 @@ function Navbar() {
         <img src={navicon} alt="logo" />
         <div className="flex gap-20">
           <Link to="/lobby">
-            <button className="bg-[#B9FF09] rounded-full text-2xl px-12 py-4  font-semibold text-black ">
+            <button className="bg-[#B9FF09] rounded-full text-3xl px-12 py-5  font-semibold text-black ">
               Play Now!
             </button>{" "}
           </Link>
