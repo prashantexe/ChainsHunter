@@ -48,9 +48,9 @@ export const CharacterController = ({
   const rigidbody = useRef();
   const [animation, setAnimation] = useState("Idle");
   const lastShoot = useRef(0);
-  
-
+  const [movement, setMovement] = useState({ forward: false, backward: false, left: false, right: false, fire: false });
   const scene = useThree((state) => state.scene);
+
   const spawnRandomly = () => {
     const spawns = [];
     for (let i = 0; i < 1000; i++) {
@@ -87,6 +87,73 @@ export const CharacterController = ({
     }
   }, [state.state.health]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.repeat) return;
+      switch (event.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+          setMovement((prev) => ({ ...prev, forward: true }));
+          break;
+        case 'KeyS':
+        case 'ArrowDown':
+          setMovement((prev) => ({ ...prev, backward: true }));
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          setMovement((prev) => ({ ...prev, left: true }));
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          setMovement((prev) => ({ ...prev, right: true }));
+          break;
+        case 'KeyF':
+          setMovement((prev) => ({ ...prev, fire: true }));
+          break;
+        default:
+          break;
+      }
+    };
+
+    const handleKeyUp = (event) => {
+      switch (event.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+          setMovement((prev) => ({ ...prev, forward: false }));
+          break;
+        case 'KeyS':
+        case 'ArrowDown':
+          setMovement((prev) => ({ ...prev, backward: false }));
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          setMovement((prev) => ({ ...prev, left: false }));
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          setMovement((prev) => ({ ...prev, right: false }));
+          break;
+        case 'KeyF':
+          setMovement((prev) => ({ ...prev, fire: false }));
+          break;
+        default:
+          break;
+      }
+    };
+
+    if (userPlayer) {
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
+    }
+
+    return () => {
+      if (userPlayer) {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('keyup', handleKeyUp);
+      }
+    };
+  }, [userPlayer]);
+
   useFrame((_, delta) => {
     // CAMERA FOLLOW
     if (controls.current) {
@@ -111,26 +178,46 @@ export const CharacterController = ({
 
     // Update player position based on joystick state
     const angle = joystick.angle();
-    if (joystick.isJoystickPressed() && angle) {
-      setAnimation("Run");
-      character.current.rotation.y = angle;
+    const movementAngle = () => {
+      if (movement.forward && movement.right) return (3 * Math.PI) / 4;
+      if (movement.forward && movement.left) return (5 * Math.PI) / 4;
+      if (movement.backward && movement.right) return Math.PI / 4;
+      if (movement.backward && movement.left) return -(Math.PI / 4);
+      if (movement.forward) return Math.PI;
+      if (movement.backward) return 0;
+      if (movement.left) return -(Math.PI / 2);
+      if (movement.right) return Math.PI / 2;
+      return null;
+    };
 
-      // move character in its own direction
+    const applyMovement = (angle) => {
       const impulse = {
         x: Math.sin(angle) * MOVEMENT_SPEED * delta,
         y: 0,
         z: Math.cos(angle) * MOVEMENT_SPEED * delta,
       };
-
       rigidbody.current.applyImpulse(impulse, true);
+      character.current.rotation.y = angle;
+    };
+
+    if (joystick.isJoystickPressed() && angle) {
+      setAnimation("Run");
+      applyMovement(angle);
     } else {
-      setAnimation("Idle");
+      const moveAngle = movementAngle();
+      if (moveAngle !== null) {
+        setAnimation("Run");
+        applyMovement(moveAngle);
+      } else {
+        setAnimation("Idle");
+      }
     }
+
     const playerWorldPos = vec3(rigidbody.current.translation());
 
     if (joystick.isPressed("jump") && playerWorldPos.y < 2) {
       setAnimation("Run");
-      character.current.rotation.y = angle;
+      applyMovement(angle);
 
       // move character in its own direction
       const impulse = {
@@ -151,7 +238,7 @@ export const CharacterController = ({
     }
 
     // Check if fire button is pressed
-    if (joystick.isPressed("fire")) {
+    if (joystick.isPressed("fire") || movement.fire) {
       // fire
       setAnimation(
         joystick.isJoystickPressed() && angle ? "Run_Shoot" : "Idle_Shoot"
@@ -161,7 +248,7 @@ export const CharacterController = ({
         const newBullet = {
           id: state.id + "-" + +new Date(),
           position: vec3(rigidbody.current.translation()),
-          angle,
+          angle: character.current.rotation.y,
           player: state.id,
         };
         onFire(newBullet);
