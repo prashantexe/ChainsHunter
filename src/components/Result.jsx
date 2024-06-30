@@ -12,7 +12,7 @@ const Result = () => {
     var a = someValue[0].id;
   } catch (e) {
     alert("Redirecting to lobby...!");
-    window.location.replace("/");
+    window.location.replace("/lobby");
   }
   useEffect(() => {
     setApplyed(true);
