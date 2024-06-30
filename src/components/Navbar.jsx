@@ -35,7 +35,7 @@ const customTheme = darkTheme({
 function Navbar() {
   return (
     <div>
-      <div className="flex items-center justify-between md:px-32 md:pt-20">
+      <div className="flex items-center justify-between md:px-32 md:pt-14">
         <div className="flex gap-20">
           <p>How it works</p>
           <p>Marketplace</p>

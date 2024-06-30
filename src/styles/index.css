@@ -13,7 +13,7 @@ body {
 
 @keyframes slideInFromBottom {
   0% {
-    top: 56%;
+    top: 36%;
     left: 50%;
     transform: translate(-50%, 0);
   }
