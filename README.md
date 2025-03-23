@@ -2,7 +2,8 @@
 
 Welcome to **ChainsHunter**, the multiplayer survival shooting game built on the **Base chain**. Dive into a gaming experience that seamlessly integrates blockchain technology, ensuring every victory, reward, and challenge is transparent and secure.
 
-![123](https://github.com/vmmuthu31/ChainsHunter/assets/111880621/d6740416-9101-4b3a-94bb-de51bf5c75c9)
+![cover](https://github.com/user-attachments/assets/a9331f02-5a2d-445c-b593-f1c94564bf99)
+
 
 ![image](https://github.com/vmmuthu31/ChainsHunter/assets/111880621/a5046f81-d5c8-4157-84fb-759465e4e298)
 
